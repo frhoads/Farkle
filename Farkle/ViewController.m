@@ -195,10 +195,10 @@
 - (IBAction)onBankButtonPressed:(id)sender
 {
     tCounter += 0;
-    if (tCounter % 2 == 1) {
+    if (tCounter % 2 == 0) {
         tScore += score;
         totalScore.text = [NSString stringWithFormat:@"%i",tScore];
-    } else if (tCounter % 2 == 0) {
+    } else if (tCounter % 2 == 1) {
         pScore += score;
         playerTwoScore.text = [NSString stringWithFormat:@"%i",pScore];
     }
@@ -211,7 +211,7 @@
     }
     
     tCounter ++;
-    if (tCounter > 50) {
+    if (tCounter > 1) {
         userScore.alpha = 0;
         bankableScoreLabel.alpha = 0;
         bankButton.alpha = 0;
