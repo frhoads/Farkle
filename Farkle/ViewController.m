@@ -23,6 +23,7 @@
     int score;
     int tScore;
     int tCounter;
+    int pScore;
     __weak IBOutlet UILabel *userScore;
     __weak IBOutlet UILabel *totalScore;
     __weak IBOutlet UILabel *totalScoreLabel;
@@ -30,6 +31,9 @@
     __weak IBOutlet UIButton *bankButton;
     __weak IBOutlet UIButton *rollButton;
     __weak IBOutlet UILabel *gameOverLabel;
+    __weak IBOutlet UILabel *farkleOrHotDice;
+    __weak IBOutlet UILabel *playerTwoScoreLabel;
+    __weak IBOutlet UILabel *playerTwoScore;
 }
 
 @end
@@ -171,7 +175,18 @@
     } else if (sixCounter == 6) {
         score += 1200;
     }
+   
     userScore.text = [NSString stringWithFormat:@"%i", score];
+    
+    if (dice.count == 0 && score == 0) {
+        farkleOrHotDice.text = @"Farkle!";
+    } else if (score > 0) {
+        farkleOrHotDice.text = @"8-)";
+    } else if (dice.count == 6 && score >= 350) {
+        farkleOrHotDice.text = @"Hot Dice!";
+    }
+    
+    
     
 }
 
@@ -180,9 +195,13 @@
 - (IBAction)onBankButtonPressed:(id)sender
 {
     tCounter += 0;
-    tScore += score;
-    totalScore.text = [NSString stringWithFormat:@"%i",tScore];
-    
+    if (tCounter % 2 == 1) {
+        tScore += score;
+        totalScore.text = [NSString stringWithFormat:@"%i",tScore];
+    } else if (tCounter % 2 == 0) {
+        pScore += score;
+        playerTwoScore.text = [NSString stringWithFormat:@"%i",pScore];
+    }
     userScore.text = @"0";
     
     for (int i = 0; i < labels.count; i++) {
@@ -192,7 +211,7 @@
     }
     
     tCounter ++;
-    if (tCounter > 0) {
+    if (tCounter > 50) {
         userScore.alpha = 0;
         bankableScoreLabel.alpha = 0;
         bankButton.alpha = 0;
