@@ -19,8 +19,17 @@
     __weak IBOutlet DieLabel *dieLabel5;
     __weak IBOutlet DieLabel *dieLabel6;
     NSMutableArray *dice;
+    NSArray *labels;
+    int score;
+    int tScore;
+    int tCounter;
     __weak IBOutlet UILabel *userScore;
+    __weak IBOutlet UILabel *totalScore;
     __weak IBOutlet UILabel *totalScoreLabel;
+    __weak IBOutlet UILabel *bankableScoreLabel;
+    __weak IBOutlet UIButton *bankButton;
+    __weak IBOutlet UIButton *rollButton;
+    __weak IBOutlet UILabel *gameOverLabel;
 }
 
 @end
@@ -31,7 +40,7 @@
 {
     [super viewDidLoad];
     dice = [NSMutableArray array];
-
+    labels = [NSArray arrayWithObjects: dieLabel1, dieLabel2, dieLabel3, dieLabel4,dieLabel5, dieLabel6, nil];
     
     dieLabel1.delegate = self;
     dieLabel2.delegate = self;
@@ -44,8 +53,6 @@
 
 - (IBAction)onRollButtonPressed:(id)sender
 {
-    userScore = 0;
-    
     if ([dice containsObject:dieLabel1] == NO) {
         [dieLabel1 roll];
     }
@@ -69,8 +76,6 @@
     if ([dice containsObject:dieLabel6] == NO) {
         [dieLabel6 roll];
     }
-    
-    
 }
 
 -(void)didChooseDie:(DieLabel *)dieLabel
@@ -85,7 +90,7 @@
         dieLabel.backgroundColor = [UIColor greenColor];
     }
     
-    int score = 0;
+    score = 0;
     int oneCounter = 0;
     int twoCounter = 0;
     int threeCounter = 0;
@@ -166,17 +171,48 @@
     } else if (sixCounter == 6) {
         score += 1200;
     }
+    userScore.text = [NSString stringWithFormat:@"%i", score];
     
-    userScore.text = [NSString stringWithFormat:@" %i", score];
-    
-    NSLog(@"Array is %i", dice.count);
 }
+
+
+
 - (IBAction)onBankButtonPressed:(id)sender
 {
-    totalScoreLabel.text = userScore.text;
+    tCounter += 0;
+    tScore += score;
+    totalScore.text = [NSString stringWithFormat:@"%i",tScore];
     
+    userScore.text = @"0";
+    
+    for (int i = 0; i < labels.count; i++) {
+        DieLabel *label = [labels objectAtIndex:i];
+        label.backgroundColor = [UIColor greenColor];
+        label.text = @":)";
+    }
+    
+    tCounter ++;
+    if (tCounter > 0) {
+        userScore.alpha = 0;
+        bankableScoreLabel.alpha = 0;
+        bankButton.alpha = 0;
+        rollButton.alpha = 0;
+        gameOverLabel.alpha = 1;
+        gameOverLabel.textAlignment = NSTextAlignmentCenter;
+        gameOverLabel.text = @"Game Over, Fark this Game";
+        gameOverLabel.font = [gameOverLabel.font fontWithSize:(30)];
+        gameOverLabel.shadowColor = [UIColor whiteColor];
+        gameOverLabel.shadowOffset = CGSizeMake(-3.0f, 2.0f);
+        for (int i = 0; i < labels.count; i++) {
+            DieLabel *label = [labels objectAtIndex:i];
+            label.alpha = 0;
+        }
+    }
+    NSLog(@"counter is %i", tCounter);
+    [dice removeAllObjects];
     
 }
+
 
 - (void)didReceiveMemoryWarning
 {
